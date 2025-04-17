@@ -4,6 +4,7 @@ import com.sr.L.DShop.annotations.AuthenticationController;
 import com.sr.L.DShop.enums.Roles;
 import com.sr.L.DShop.models.ResponseModel;
 import com.sr.L.DShop.payload.Request.LoginRequest;
+import com.sr.L.DShop.payload.Request.RefreshRequest;
 import com.sr.L.DShop.payload.Request.RegisterRequest;
 import com.sr.L.DShop.service.impl.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,11 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ResponseModel> login(@RequestBody LoginRequest loginRequest){
-        System.out.println("hitting");
         return ResponseEntity.ok().body(authService.login(loginRequest));
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<ResponseModel> refresh(@RequestBody RefreshRequest refreshRequest){
+        return ResponseEntity.ok().body(authService.refresh(refreshRequest));
+    }
 }

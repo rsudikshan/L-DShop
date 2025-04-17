@@ -63,7 +63,7 @@ public class JwtService {
 
 
 
-    public String generateToken(String username, Integer expiration){
+    private String generateToken(String username, Integer expiration){
 
         Map<String,String> claims = new HashMap<>();
 
