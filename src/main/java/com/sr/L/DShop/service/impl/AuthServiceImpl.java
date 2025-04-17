@@ -65,7 +65,8 @@ public ResponseModel login(LoginRequest loginRequest) {
     }
 
     Map<String,String> token = new HashMap<>();
-    token.put("Bearer ",jwtService.generateToken(loginRequest.getUsername()));
+    token.put("Bearer ",jwtService.generateJwt(loginRequest.getUsername()));
+    token.put("Refresh token", jwtService.generateRefreshToken(loginRequest.getUsername()));
     SecurityContextHolder.getContext().setAuthentication(authentication);
     return ResponseBuilder.success("login successful",token);
 }

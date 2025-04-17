@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.KeyGenerator;
@@ -18,26 +19,51 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    String keySecret;
+    @Value("${jwt.secret}")
+    private String keySecret;
 
-    JwtService(){
-        try {
-            KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacSHA256");
-            SecretKey secretKey = keyGenerator.generateKey();
-            keySecret = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+    @Value("${jwt.expiration}")
+    private Integer jwtExpirationMs;
 
+    @Value("${refresh.token.expiration}")
+    private Integer refreshTokenExpirationMs;
 
-        }
-        catch (RuntimeException | NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-    }
+//    String keySecret;
+//
+//    JwtService(){
+//        try {
+//            KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacSHA256");
+//            SecretKey secretKey = keyGenerator.generateKey();
+//            keySecret = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+//
+//
+//        }
+//        catch (RuntimeException | NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public SecretKey getKey(){
+//        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(keySecret));
+//    }
 
-    public SecretKey getKey(){
+    private SecretKey getKey(){
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(keySecret));
     }
 
-    public String generateToken(String username){
+
+
+    public String generateJwt(String username){
+       return generateToken(username, jwtExpirationMs);
+    }
+
+    public String generateRefreshToken(String username){
+        return generateToken(username, refreshTokenExpirationMs);
+    }
+
+
+
+    public String generateToken(String username, Integer expiration){
 
         Map<String,String> claims = new HashMap<>();
 
@@ -47,7 +73,7 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*60))
+                .setExpiration(new Date(System.currentTimeMillis()+expiration))
                 .signWith(getKey())
                 .compact()
                 ;
