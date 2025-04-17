@@ -1,26 +1,32 @@
 package com.sr.L.DShop.controllers;
 
+import com.sr.L.DShop.annotations.AuthenticationController;
 import com.sr.L.DShop.enums.Roles;
-import com.sr.L.DShop.models.ResponseBody;
+import com.sr.L.DShop.models.ResponseModel;
+import com.sr.L.DShop.payload.Request.LoginRequest;
 import com.sr.L.DShop.payload.Request.RegisterRequest;
-import com.sr.L.DShop.service.AuthService;
-import lombok.NonNull;
+import com.sr.L.DShop.service.impl.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RestController
-@RequestMapping("/api/auth")
+@AuthenticationController
 @CrossOrigin(origins = "*")
 public class AuthController {
 
-    private final AuthService authService;
+    private final AuthServiceImpl authService;
 
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseBody> register(@RequestBody RegisterRequest registerRequest){
+    public ResponseEntity<ResponseModel> register(@RequestBody RegisterRequest registerRequest){
         return ResponseEntity.ok().body(authService.register(registerRequest, Roles.USER));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ResponseModel> login(@RequestBody LoginRequest loginRequest){
+        System.out.println("hitting");
+        return ResponseEntity.ok().body(authService.login(loginRequest));
     }
 
 }

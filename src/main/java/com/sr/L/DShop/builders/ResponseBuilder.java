@@ -1,19 +1,19 @@
 package com.sr.L.DShop.builders;
 
-import com.sr.L.DShop.models.ResponseBody;
+import com.sr.L.DShop.models.ResponseModel;
 
 public class ResponseBuilder {
 
-    public static ResponseBody success(String message){
-        return ResponseBody.builder()
+    public static ResponseModel success(String message){
+        return ResponseModel.builder()
                 .status("success")
                 .success(true)
                 .message(message)
                 .build();
     }
 
-    public static ResponseBody success(String message,Object object){
-        return ResponseBody.builder()
+    public static ResponseModel success(String message, Object object){
+        return ResponseModel.builder()
                 .status("success")
                 .success(true)
                 .message(message)
@@ -21,11 +21,20 @@ public class ResponseBuilder {
                 .build();
     }
 
-    public static ResponseBody failure(String message){
-        return ResponseBody.builder()
+    public static ResponseModel failure(String message){
+        return ResponseModel.builder()
                 .status("failure")
                 .success(false)
                 .message(message)
+                .build();
+    }
+
+    public static ResponseModel failure(String message,Object object){
+        return ResponseModel.builder()
+                .status("failure")
+                .success(false)
+                .message(message)
+                .body(object)
                 .build();
     }
 }

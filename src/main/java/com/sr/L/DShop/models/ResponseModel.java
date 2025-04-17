@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Builder
 @Setter
-public class ResponseBody {
+public class ResponseModel {
 
     public String message;
     public String status;

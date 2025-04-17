@@ -1,5 +1,6 @@
 package com.sr.L.DShop.exceptions.handler;
 
+import com.sr.L.DShop.builders.ResponseBuilder;
 import com.sr.L.DShop.exceptions.UnauthorizedException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -12,9 +13,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+//    @ExceptionHandler(UnauthorizedException.class) basic response
+//    public ResponseEntity<?> handleUnauthorizedException(UnauthorizedException e){
+//        return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
+//    }
+
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<?> handleUnauthorizedException(UnauthorizedException e){
-        return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                ResponseBuilder.failure(e.getMessage())
+        );
     }
 
 }
