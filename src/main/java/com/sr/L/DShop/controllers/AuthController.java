@@ -33,4 +33,10 @@ public class AuthController {
     public ResponseEntity<ResponseModel> refresh(@RequestBody RefreshRequest refreshRequest){
         return ResponseEntity.ok().body(authService.refresh(refreshRequest));
     }
+
+    @PostMapping("/admin/auth/register")
+    public ResponseEntity<?> adminRegister(@RequestBody RegisterRequest adminRegister){
+        return ResponseEntity.ok().body(authService.register(adminRegister,Roles.ADMIN));
+    }
+
 }

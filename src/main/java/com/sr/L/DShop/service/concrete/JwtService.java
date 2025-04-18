@@ -4,7 +4,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.KeyGenerator;
@@ -16,8 +19,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@RequiredArgsConstructor
 @Service
 public class JwtService {
+
+    private final LdUserDetailsService userDetailsService;
 
     @Value("${jwt.secret}")
     private String keySecret;
@@ -54,18 +60,26 @@ public class JwtService {
 
 
     public String generateJwt(String username){
-       return generateToken(username, jwtExpirationMs);
+       return generateToken(username, jwtExpirationMs, false);
     }
 
     public String generateRefreshToken(String username){
-        return generateToken(username, refreshTokenExpirationMs);
+        return generateToken(username, refreshTokenExpirationMs ,true);
     }
 
 
 
-    private String generateToken(String username, Integer expiration){
+    private String generateToken(String username, Integer expiration ,Boolean isRefreshToken){
+
 
         Map<String,String> claims = new HashMap<>();
+
+        if(!isRefreshToken){
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            System.out.println(userDetails.getAuthorities().toString());
+            claims.put("role", userDetails.getAuthorities().toString());
+        }
+
 
 
         return Jwts

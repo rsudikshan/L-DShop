@@ -61,15 +61,25 @@ public ResponseModel login(LoginRequest loginRequest) {
             );
 
     if(!authentication.isAuthenticated()){
-        System.out.println("failed 2");
         throw new UnauthorizedException("Invalid credentials",loginRequest.getUsername());
     }
 
-    Map<String,String> token = new HashMap<>();
-    token.put("Bearer ",jwtService.generateJwt(loginRequest.getUsername()));
-    token.put("Refresh token", jwtService.generateRefreshToken(loginRequest.getUsername()));
+    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+    Map<String,String> user = new HashMap<>();
+    user.put("username",userDetails.getUsername());
+    user.put("role",userDetails.getAuthorities().toString());
+
+    Map<String,String> tokens = new HashMap<>();
+    tokens.put("jwt",jwtService.generateJwt(loginRequest.getUsername()));
+    tokens.put("refresh_token", jwtService.generateRefreshToken(loginRequest.getUsername()));
+
+    Map<String,Object> responseMap = new HashMap<>();
+    responseMap.put("user",user);
+    responseMap.put("tokens",tokens);
+
     SecurityContextHolder.getContext().setAuthentication(authentication);
-    return ResponseBuilder.success("login successful",token);
+    return ResponseBuilder.success("login successful",responseMap);
 }
 
     @Override
@@ -87,6 +97,7 @@ public ResponseModel login(LoginRequest loginRequest) {
         String newAccessToken = jwtService.generateJwt(username);
         return ResponseBuilder.success("New token",newAccessToken);
     }
+
 
     public LdUser registerDtoToEntityConverterHelper(RegisterRequest registerRequest, Roles role){
 
