@@ -8,6 +8,7 @@ import com.sr.L.DShop.models.ResponseModel;
 import com.sr.L.DShop.payload.Request.LoginRequest;
 import com.sr.L.DShop.payload.Request.RefreshRequest;
 import com.sr.L.DShop.payload.Request.RegisterRequest;
+import com.sr.L.DShop.payload.Response.LoginResponse;
 import com.sr.L.DShop.repo.UserRepo;
 import com.sr.L.DShop.service.AuthService;
 import com.sr.L.DShop.service.concrete.JwtService;
@@ -66,20 +67,15 @@ public ResponseModel login(LoginRequest loginRequest) {
 
     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-    Map<String,String> user = new HashMap<>();
-    user.put("username",userDetails.getUsername());
-    user.put("role",userDetails.getAuthorities().toString());
-
-    Map<String,String> tokens = new HashMap<>();
-    tokens.put("jwt",jwtService.generateJwt(loginRequest.getUsername()));
-    tokens.put("refresh_token", jwtService.generateRefreshToken(loginRequest.getUsername()));
-
-    Map<String,Object> responseMap = new HashMap<>();
-    responseMap.put("user",user);
-    responseMap.put("tokens",tokens);
-
     SecurityContextHolder.getContext().setAuthentication(authentication);
-    return ResponseBuilder.success("login successful",responseMap);
+    return ResponseBuilder.success("login successful"
+            , LoginResponse.builder()
+                    .jwt(jwtService.generateJwt(loginRequest.getUsername()))
+                    .refreshToken(jwtService.generateRefreshToken(loginRequest.getUsername()))
+                    .username(loginRequest.getUsername())
+                    .role(userDetails.getAuthorities().toString())
+                    .build()
+    );
 }
 
     @Override
