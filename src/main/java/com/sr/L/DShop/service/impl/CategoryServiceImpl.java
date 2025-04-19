@@ -10,10 +10,12 @@ import com.sr.L.DShop.repo.CategoryRepo;
 import com.sr.L.DShop.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 

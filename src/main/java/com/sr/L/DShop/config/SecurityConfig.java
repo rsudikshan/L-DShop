@@ -1,5 +1,6 @@
 package com.sr.L.DShop.config;
 
+import com.sr.L.DShop.annotations.ProductController;
 import com.sr.L.DShop.filter.JwtFilter;
 import com.sr.L.DShop.service.concrete.LdUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -37,12 +38,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                     customizer -> {
                         customizer
-                                .requestMatchers("/api/v1/auth/**")
+                                .requestMatchers(
+                                        "/api/v1/auth/**",
+                                        "/api/v1/auth/admin/auth/register",
+                                        "/api/v1/auth/superAdmin/auth/register",
+                                        "/api/v1/categories/getAllCategories")
                                 .permitAll()
-                                .requestMatchers("/test")
+                                .requestMatchers("/test", "/api/v1/product/admin/**")
                                 .hasRole("ADMIN")
-                                .requestMatchers("/api/v1/category/super/**")
+                                .requestMatchers("/api/v1/categories/super/**")
                                 .hasRole("SUPER_ADMIN")
+//                                .anyRequest().permitAll();
                                 .anyRequest()
                                 .authenticated();
                     }

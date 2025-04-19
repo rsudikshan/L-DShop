@@ -26,8 +26,11 @@ public class Products extends AbstractBaseEntity {
 
 
     @ManyToOne
-    @JoinColumn(referencedColumnName = "id")
-    @Column(unique = true)
+    @JoinColumn(name = "categoryId", referencedColumnName = "id")
     private Categories category;
+
+    private String imageFileName;
+
+
 
 }

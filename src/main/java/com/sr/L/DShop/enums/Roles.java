@@ -19,6 +19,16 @@ public enum Roles {
             Permissions.ADMIN_UPDATE
     )),
 
+    SUPER_ADMIN(
+      Set.of(
+              Permissions.SUPER_ADMIN_CREATE,
+              Permissions.SUPER_ADMIN_READ,
+              Permissions.SUPER_ADMIN_UPDATE,
+              Permissions.SUPER_ADMIN_DELETE
+      )
+    ),
+
+
     USER(Collections.emptySet());
 
     private final Set<Permissions> authorities;

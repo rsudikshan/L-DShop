@@ -38,5 +38,11 @@ public class AuthController {
     public ResponseEntity<?> adminRegister(@RequestBody RegisterRequest adminRegister){
         return ResponseEntity.ok().body(authService.register(adminRegister,Roles.ADMIN));
     }
+    //need better response in admin just like login
+
+    @PostMapping("/superAdmin/auth/register")
+    public ResponseEntity<?> superAdminRegister(@RequestBody RegisterRequest adminRegister){
+        return ResponseEntity.ok().body(authService.register(adminRegister,Roles.SUPER_ADMIN));
+    }
 
 }

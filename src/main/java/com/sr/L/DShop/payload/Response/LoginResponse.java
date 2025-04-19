@@ -3,6 +3,8 @@ package com.sr.L.DShop.payload.Response;
 import lombok.*;
 
 @Builder
+@Getter
+@Setter
 public class LoginResponse {
     private String role;
     private String username;
