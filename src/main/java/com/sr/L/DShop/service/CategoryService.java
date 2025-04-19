@@ -7,4 +7,5 @@ import org.apache.coyote.Response;
 public interface CategoryService {
     ResponseModel addCategory(AddCategoryRequest addCategoryRequest);
     ResponseModel deleteCategory();
+    ResponseModel getAll();
 }

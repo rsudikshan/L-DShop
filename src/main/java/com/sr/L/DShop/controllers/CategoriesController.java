@@ -22,4 +22,8 @@ public class CategoriesController {
     }
 
 
+    @GetMapping("/getAllCategories")
+    public ResponseEntity<ResponseModel> getAll(){
+        return ResponseEntity.ok().body(categoryService.getAll());
+    }
 }
