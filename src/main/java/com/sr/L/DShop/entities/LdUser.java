@@ -23,7 +23,6 @@ public class LdUser extends AbstractBaseEntity implements UserDetails {
 
     @Column(unique = true)
     private String username;
-
     private String password;
    // private String contactNo;
 

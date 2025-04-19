@@ -39,6 +39,10 @@ public class SecurityConfig {
                         customizer
                                 .requestMatchers("/api/v1/auth/**")
                                 .permitAll()
+                                .requestMatchers("/test")
+                                .hasRole("ADMIN")
+                                .requestMatchers("/api/v1/category/**")
+                                .hasRole("SUPER_ADMIN")
                                 .anyRequest()
                                 .authenticated();
                     }

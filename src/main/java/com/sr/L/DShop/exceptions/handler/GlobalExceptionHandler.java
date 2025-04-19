@@ -1,6 +1,7 @@
 package com.sr.L.DShop.exceptions.handler;
 
 import com.sr.L.DShop.builders.ResponseBuilder;
+import com.sr.L.DShop.exceptions.CategoryException;
 import com.sr.L.DShop.exceptions.UnauthorizedException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -25,4 +26,10 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(CategoryException.class)
+    public ResponseEntity<?> handleCategoryException(CategoryException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                ResponseBuilder.failure(e.getMessage())
+        );
+    }
 }
