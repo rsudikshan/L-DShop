@@ -1,6 +1,7 @@
 package com.sr.L.DShop.entities;
 
 import com.sr.L.DShop.entities.abstractentity.AbstractBaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,9 +23,11 @@ public class Products extends AbstractBaseEntity {
 
     private String productName;
     private String productPrice;
-    private String category;
 
 
-
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "id")
+    @Column(unique = true)
+    private Categories category;
 
 }
