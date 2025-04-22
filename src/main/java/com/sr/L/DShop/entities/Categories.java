@@ -1,10 +1,7 @@
 package com.sr.L.DShop.entities;
 
 import com.sr.L.DShop.entities.abstractentity.AbstractBaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +16,11 @@ import org.springframework.security.core.userdetails.User;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Categories extends AbstractBaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
 
     @Column(unique = true)
     private String categoryName;

@@ -39,6 +39,10 @@ private final JwtService jwtService;
 @Override
 public ResponseModel register(RegisterRequest registerRequest, Roles role){
 
+    if(registerRequest.getUsername().isEmpty() || registerRequest.getEmail().isEmpty() || registerRequest.getPassword().isEmpty()){
+        throw new UnauthorizedException("Empty form fields");
+    }
+
     if(userRepo.existsByEmail(registerRequest.getEmail()) && !userRepo.existsByUsername(registerRequest.getUsername())){
         throw new UnauthorizedException("Email already exists",registerRequest.getEmail());
     }

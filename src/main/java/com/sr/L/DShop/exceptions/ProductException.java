@@ -1,7 +1,7 @@
 package com.sr.L.DShop.exceptions;
 
-public class ProductException extends Exception{
-    ProductException(String message){
+public class ProductException extends RuntimeException{
+    public ProductException(String message){
         super(message);
     }
 }

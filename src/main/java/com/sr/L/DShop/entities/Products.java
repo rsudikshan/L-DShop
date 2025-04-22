@@ -1,10 +1,7 @@
 package com.sr.L.DShop.entities;
 
 import com.sr.L.DShop.entities.abstractentity.AbstractBaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.java.Log;
@@ -16,6 +13,10 @@ import lombok.extern.java.Log;
 @Setter
 @SuperBuilder
 public class Products extends AbstractBaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "adminId",referencedColumnName = "id")

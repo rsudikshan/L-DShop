@@ -5,6 +5,7 @@ import com.sr.L.DShop.entities.Categories;
 import com.sr.L.DShop.entities.LdUser;
 import com.sr.L.DShop.entities.Products;
 import com.sr.L.DShop.exceptions.CategoryException;
+import com.sr.L.DShop.exceptions.ProductException;
 import com.sr.L.DShop.models.ResponseModel;
 import com.sr.L.DShop.payload.Request.AddProductRequest;
 import com.sr.L.DShop.payload.Request.DeleteProduct;
@@ -32,6 +33,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseModel addProduct(AddProductRequest addProductRequest) {
+
+        if(addProductRequest.getProductName().isEmpty() || addProductRequest.getProductPrice().isEmpty() || addProductRequest.getCategoryId() == null){
+            throw new ProductException("Invalid request body");
+        }
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<Categories> categoryOptional = categoryRepo.findById(addProductRequest.getCategoryId());
         if(categoryOptional.isEmpty()){
