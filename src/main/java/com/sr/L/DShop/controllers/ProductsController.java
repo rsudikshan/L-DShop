@@ -6,6 +6,7 @@ import com.sr.L.DShop.payload.Request.AddProductRequest;
 import com.sr.L.DShop.service.impl.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -19,5 +20,10 @@ public class ProductsController {
     @PostMapping("/admin/addProduct")
     public ResponseEntity<ResponseModel> addProduct(@RequestBody AddProductRequest addProductRequest){
         return ResponseEntity.ok().body(productService.addProduct(addProductRequest));
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<ResponseModel> getAllProducts(){
+        return ResponseEntity.ok().body(productService.getAllProducts());
     }
 }

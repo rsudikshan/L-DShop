@@ -39,10 +39,14 @@ public class SecurityConfig {
                     customizer -> {
                         customizer
                                 .requestMatchers(
+
                                         "/api/v1/auth/**",
                                         "/api/v1/auth/admin/auth/register",
                                         "/api/v1/auth/superAdmin/auth/register",
-                                        "/api/v1/categories/getAllCategories")
+
+                                        "/api/v1/categories/getAllCategories",
+
+                                        "/api/v1/product/getAll")
                                 .permitAll()
                                 .requestMatchers("/test", "/api/v1/product/admin/**")
                                 .hasRole("ADMIN")

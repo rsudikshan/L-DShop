@@ -9,6 +9,7 @@ import com.sr.L.DShop.exceptions.ProductException;
 import com.sr.L.DShop.models.ResponseModel;
 import com.sr.L.DShop.payload.Request.AddProductRequest;
 import com.sr.L.DShop.payload.Request.DeleteProduct;
+import com.sr.L.DShop.payload.Response.ProductResponse;
 import com.sr.L.DShop.repo.CategoryRepo;
 import com.sr.L.DShop.repo.ProductRepo;
 import com.sr.L.DShop.repo.UserRepo;
@@ -21,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -54,7 +56,24 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseModel getAllProducts() {
-        return null;
+        List<Products> productList = productRepo.findAll();
+        List<ProductResponse> productResponses =
+                productList.
+                        stream()
+                        .map(product -> {
+                            return ProductResponse
+                                    .builder()
+                                    .productName(product.getProductName())
+                                    .productPrice(product.getProductPrice())
+                                    .categoryName(product.getCategory().getCategoryName())
+                                    .vendorName(product.getUserId().getUsername())
+                                    .imageFileName(null)
+                                    .build();
+                        })
+                        .toList();
+
+
+        return ResponseBuilder.success("Successful",productResponses);
     }
 
     @Override
