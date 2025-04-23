@@ -9,7 +9,7 @@ import com.sr.L.DShop.exceptions.ProductException;
 import com.sr.L.DShop.exceptions.UnauthorizedException;
 import com.sr.L.DShop.models.ResponseModel;
 import com.sr.L.DShop.payload.Request.AddProductRequest;
-import com.sr.L.DShop.payload.Request.DeleteProduct;
+import com.sr.L.DShop.payload.Request.DeleteProductRequest;
 import com.sr.L.DShop.payload.Request.UpdateProductRequest;
 import com.sr.L.DShop.payload.Response.ProductResponse;
 import com.sr.L.DShop.repo.CategoryRepo;
@@ -18,15 +18,14 @@ import com.sr.L.DShop.repo.UserRepo;
 import com.sr.L.DShop.service.ProductService;
 import com.sr.L.DShop.utils.PatchHelper;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.connector.Response;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -105,8 +104,37 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseModel deleteProduct(DeleteProduct deleteProduct) {
-        return null;
+    public ResponseModel deleteProduct(DeleteProductRequest deleteProduct) {
+
+        UserDetails userDetails = getAuthenticatedUserDetails();
+        Optional<LdUser> user = userRepo.findByUsername(userDetails.getUsername());
+
+        if(deleteProduct.getId()==null){
+            throw new ProductException("Empty Request Body");
+        }
+
+        if(user.isEmpty()){
+            throw new UnauthorizedException("No such user");
+        }
+
+        Optional<Products> products = productRepo.findById(deleteProduct.getId());
+
+        if(products.isEmpty()){
+            throw new ProductException("No such product registered");
+        }
+
+
+
+
+        LdUser ldUser = user.get();
+
+        if(!Objects.equals(ldUser.getId(), products.get().getAdminId().getId())){
+            throw new UnauthorizedException("Product registered with different admin");
+        }
+
+        productRepo.deleteById(products.get().getId());
+
+        return ResponseBuilder.success("Delete successful");
     }
 
     private List<ProductResponse> entityToDtoConverterHelper(List<Products> productList){
