@@ -41,4 +41,19 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(NoSuchFieldException.class)
+    public ResponseEntity<?> handleNoSuchFieldException(NoSuchFieldException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                ResponseBuilder.failure(e.getMessage())
+        );
+    }
+
+    @ExceptionHandler(IllegalAccessException.class)
+    public ResponseEntity<?> handleNoSuchFieldException(IllegalAccessException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                ResponseBuilder.failure(e.getMessage())
+        );
+    }
+
+
 }

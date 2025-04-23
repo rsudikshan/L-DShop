@@ -10,11 +10,13 @@ import com.sr.L.DShop.exceptions.UnauthorizedException;
 import com.sr.L.DShop.models.ResponseModel;
 import com.sr.L.DShop.payload.Request.AddProductRequest;
 import com.sr.L.DShop.payload.Request.DeleteProduct;
+import com.sr.L.DShop.payload.Request.UpdateProductRequest;
 import com.sr.L.DShop.payload.Response.ProductResponse;
 import com.sr.L.DShop.repo.CategoryRepo;
 import com.sr.L.DShop.repo.ProductRepo;
 import com.sr.L.DShop.repo.UserRepo;
 import com.sr.L.DShop.service.ProductService;
+import com.sr.L.DShop.utils.PatchHelper;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.connector.Response;
 import org.springframework.security.core.Authentication;
@@ -22,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -63,9 +66,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseModel getAdminsProducts() {
-        UserDetails userDetails =
-                (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = this.getAuthenticatedUserDetails();
 
+        //this check is redundant but we cant extract id directly from user details because of super builder
         Optional<LdUser> user = userRepo.findByUsername(userDetails.getUsername());
         if(user.isEmpty()){
             throw new UnauthorizedException("No such user");
@@ -76,8 +79,29 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseModel updateProduct(AddProductRequest addProductRequest) {
-        return null;
+    public ResponseModel updateProduct(UpdateProductRequest updateProductRequest) throws NoSuchFieldException,IllegalAccessException {
+        UserDetails userDetails = getAuthenticatedUserDetails();
+        Optional<LdUser> user = userRepo.findByUsername(userDetails.getUsername());
+        if(user.isEmpty()){
+            throw new UnauthorizedException("No such user");
+        }
+
+        Optional<Products> product = productRepo.findById(updateProductRequest.getId());
+
+        if(product.isEmpty()){
+            throw new ProductException("No such product");
+        }
+
+        Products updatedProduct = product.get();
+        LdUser authenticatedUser = user.get();
+
+        if(updatedProduct.getAdminId().getId().equals(authenticatedUser.getId())){
+            throw new UnauthorizedException("Product registered with different admin");
+        }
+
+        PatchHelper.patchNonNullFields(updateProductRequest,updatedProduct);
+        productRepo.save(updatedProduct);
+        return ResponseBuilder.success("Update successful",updatedProduct.getProductName());
     }
 
     @Override
@@ -93,6 +117,7 @@ public class ProductServiceImpl implements ProductService {
                             .builder()
                             .productName(product.getProductName())
                             .productPrice(product.getProductPrice())
+                            .productId(product.getId())
                             .categoryName(product.getCategory().getCategoryName())
                             .vendorName(product.getAdminId().getUsername())
                             .imageFileName(null)
@@ -110,5 +135,9 @@ public class ProductServiceImpl implements ProductService {
                 .createdAt(LocalDateTime.now())
                 .category(categoryName)
                 .build();
+    }
+
+    private UserDetails getAuthenticatedUserDetails(){
+       return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

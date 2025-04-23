@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class ProductResponse {
+    private Long productId;
     private String productName;
     private String productPrice;
     private String vendorName;
