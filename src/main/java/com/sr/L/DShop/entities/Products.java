@@ -20,7 +20,7 @@ public class Products extends AbstractBaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "adminId",referencedColumnName = "id")
-    private LdUser userId;
+    private LdUser adminId;
 
     private String productName;
     private String productPrice;

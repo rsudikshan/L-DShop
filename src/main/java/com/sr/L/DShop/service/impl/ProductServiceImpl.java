@@ -6,6 +6,7 @@ import com.sr.L.DShop.entities.LdUser;
 import com.sr.L.DShop.entities.Products;
 import com.sr.L.DShop.exceptions.CategoryException;
 import com.sr.L.DShop.exceptions.ProductException;
+import com.sr.L.DShop.exceptions.UnauthorizedException;
 import com.sr.L.DShop.models.ResponseModel;
 import com.sr.L.DShop.payload.Request.AddProductRequest;
 import com.sr.L.DShop.payload.Request.DeleteProduct;
@@ -57,28 +58,21 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ResponseModel getAllProducts() {
         List<Products> productList = productRepo.findAll();
-        List<ProductResponse> productResponses =
-                productList.
-                        stream()
-                        .map(product -> {
-                            return ProductResponse
-                                    .builder()
-                                    .productName(product.getProductName())
-                                    .productPrice(product.getProductPrice())
-                                    .categoryName(product.getCategory().getCategoryName())
-                                    .vendorName(product.getUserId().getUsername())
-                                    .imageFileName(null)
-                                    .build();
-                        })
-                        .toList();
-
-
-        return ResponseBuilder.success("Successful",productResponses);
+        return ResponseBuilder.success("Successful",entityToDtoConverterHelper(productList));
     }
 
     @Override
     public ResponseModel getAdminsProducts() {
-        return null;
+        UserDetails userDetails =
+                (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Optional<LdUser> user = userRepo.findByUsername(userDetails.getUsername());
+        if(user.isEmpty()){
+            throw new UnauthorizedException("No such user");
+        }
+
+        List<Products> productsList = productRepo.findByAdminId_Id(user.get().getId());
+        return ResponseBuilder.success("Product List:", entityToDtoConverterHelper(productsList));
     }
 
     @Override
@@ -91,12 +85,28 @@ public class ProductServiceImpl implements ProductService {
         return null;
     }
 
+    private List<ProductResponse> entityToDtoConverterHelper(List<Products> productList){
+        return productList.
+                stream()
+                .map(product -> {
+                    return ProductResponse
+                            .builder()
+                            .productName(product.getProductName())
+                            .productPrice(product.getProductPrice())
+                            .categoryName(product.getCategory().getCategoryName())
+                            .vendorName(product.getAdminId().getUsername())
+                            .imageFileName(null)
+                            .build();
+                })
+                .toList();
+    }
+
 //
     private Products dtoToEntityConverterHelper(AddProductRequest addProductRequest,LdUser ldUser,Categories categoryName){
         return Products.builder()
                 .productName(addProductRequest.getProductName())
                 .productPrice(addProductRequest.getProductPrice())
-                .userId(ldUser)
+                .adminId(ldUser)
                 .createdAt(LocalDateTime.now())
                 .category(categoryName)
                 .build();
