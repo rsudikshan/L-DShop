@@ -5,6 +5,7 @@ import com.sr.L.DShop.entities.LdUser;
 import com.sr.L.DShop.entities.OrderedItems;
 import com.sr.L.DShop.entities.Orders;
 import com.sr.L.DShop.entities.Products;
+import com.sr.L.DShop.enums.PaymentStatus;
 import com.sr.L.DShop.exceptions.ProductException;
 import com.sr.L.DShop.exceptions.UnauthorizedException;
 import com.sr.L.DShop.models.ResponseModel;
@@ -42,6 +43,7 @@ public class OrderServiceImpl implements OrderService {
                 .builder()
                 .orderTag(orderTag)
                 .ldUser(getAuthenticatedUserEntity())
+                .paymentStatus(PaymentStatus.PENDING)
                 .build();
 
         int size = orderRequest.getOrderItems().size();
@@ -69,6 +71,8 @@ public class OrderServiceImpl implements OrderService {
         Map<String, Object> orderDetails = new HashMap<>();
         orderDetails.put("order_tag",orderTag);
         orderDetails.put("order_id",userOrder.getId());
+        orderDetails.put("payment_status","pending");
+
         return ResponseBuilder.success("Order placed successfully",orderDetails);
     }
 

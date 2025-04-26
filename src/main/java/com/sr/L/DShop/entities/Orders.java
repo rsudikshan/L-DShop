@@ -1,10 +1,8 @@
 package com.sr.L.DShop.entities;
 
 import com.sr.L.DShop.entities.abstractentity.AbstractBaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.sr.L.DShop.enums.PaymentStatus;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -23,5 +21,9 @@ public class Orders extends AbstractBaseEntity {
     @ManyToOne
     @JoinColumn(name = "customerId", referencedColumnName = "id")
     private LdUser ldUser;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
+
 
 }
