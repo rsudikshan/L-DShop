@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @CategoryController
 @RequiredArgsConstructor
-public class CategoriesController {
+public class CategoryControllers {
 
     private final CategoryServiceImpl categoryService;
 

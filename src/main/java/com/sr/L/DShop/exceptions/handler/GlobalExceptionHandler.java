@@ -2,6 +2,7 @@ package com.sr.L.DShop.exceptions.handler;
 
 import com.sr.L.DShop.builders.ResponseBuilder;
 import com.sr.L.DShop.exceptions.CategoryException;
+import com.sr.L.DShop.exceptions.OrderException;
 import com.sr.L.DShop.exceptions.ProductException;
 import com.sr.L.DShop.exceptions.UnauthorizedException;
 import org.springframework.core.Ordered;
@@ -50,6 +51,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalAccessException.class)
     public ResponseEntity<?> handleNoSuchFieldException(IllegalAccessException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                ResponseBuilder.failure(e.getMessage())
+        );
+    }
+
+    @ExceptionHandler(OrderException.class)
+    public ResponseEntity<?> handlePaymentException(OrderException e){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ResponseBuilder.failure(e.getMessage())
         );

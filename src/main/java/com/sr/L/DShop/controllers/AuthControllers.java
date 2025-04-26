@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @AuthenticationController
-public class AuthController {
+public class AuthControllers {
 
     private final AuthServiceImpl authService;
 

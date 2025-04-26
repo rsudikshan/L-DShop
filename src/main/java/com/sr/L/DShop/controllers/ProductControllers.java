@@ -3,6 +3,7 @@ package com.sr.L.DShop.controllers;
 import com.sr.L.DShop.annotations.ProductController;
 import com.sr.L.DShop.models.ResponseModel;
 import com.sr.L.DShop.payload.Request.AddProductRequest;
+import com.sr.L.DShop.payload.Request.DeleteProductRequest;
 import com.sr.L.DShop.payload.Request.UpdateProductRequest;
 import com.sr.L.DShop.service.impl.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RequiredArgsConstructor
 @ProductController
-public class ProductsController {
+public class ProductControllers {
 
     private final ProductServiceImpl productService;
 
@@ -26,6 +27,11 @@ public class ProductsController {
     @PostMapping("/admin/updateProduct")
     public ResponseEntity<ResponseModel> updateProduct(@RequestBody UpdateProductRequest updateProductRequest) throws NoSuchFieldException, IllegalAccessException {
         return ResponseEntity.ok().body(productService.updateProduct(updateProductRequest));
+    }
+
+    @PostMapping("/admin/deleteProduct")
+    public ResponseEntity<ResponseModel> updateProduct(@RequestBody DeleteProductRequest deleteProductRequest){
+        return ResponseEntity.ok().body(productService.deleteProduct(deleteProductRequest));
     }
 
     @GetMapping("/admin/getAll")

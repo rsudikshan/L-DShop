@@ -14,9 +14,6 @@ import lombok.extern.java.Log;
 @SuperBuilder
 public class Products extends AbstractBaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "adminId",referencedColumnName = "id")
@@ -31,6 +28,8 @@ public class Products extends AbstractBaseEntity {
     private Categories category;
 
     private String imageFileName;
+
+    //private Boolean inStock;
 
 
 

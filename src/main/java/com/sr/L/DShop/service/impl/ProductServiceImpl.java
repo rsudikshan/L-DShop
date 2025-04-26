@@ -3,6 +3,7 @@ package com.sr.L.DShop.service.impl;
 import com.sr.L.DShop.builders.ResponseBuilder;
 import com.sr.L.DShop.entities.Categories;
 import com.sr.L.DShop.entities.LdUser;
+import com.sr.L.DShop.entities.Orders;
 import com.sr.L.DShop.entities.Products;
 import com.sr.L.DShop.exceptions.CategoryException;
 import com.sr.L.DShop.exceptions.ProductException;
@@ -123,9 +124,6 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductException("No such product registered");
         }
 
-
-
-
         LdUser ldUser = user.get();
 
         if(!Objects.equals(ldUser.getId(), products.get().getAdminId().getId())){
@@ -168,4 +166,6 @@ public class ProductServiceImpl implements ProductService {
     private UserDetails getAuthenticatedUserDetails(){
        return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
+
+
 }

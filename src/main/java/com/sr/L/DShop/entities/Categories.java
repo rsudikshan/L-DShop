@@ -17,9 +17,6 @@ import org.springframework.security.core.userdetails.User;
 @NoArgsConstructor
 public class Categories extends AbstractBaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
 
     @Column(unique = true)
