@@ -17,7 +17,6 @@ public class OrderControllers {
 
     @PostMapping("/setOrder")
     public ResponseEntity<?> setOrder(@RequestBody OrderRequest orderRequest){
-
         return ResponseEntity.ok().body(orderService.setOrder(orderRequest));
     }
 }

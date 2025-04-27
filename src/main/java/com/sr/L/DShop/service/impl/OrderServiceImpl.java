@@ -1,19 +1,13 @@
 package com.sr.L.DShop.service.impl;
 
 import com.sr.L.DShop.builders.ResponseBuilder;
-import com.sr.L.DShop.entities.LdUser;
-import com.sr.L.DShop.entities.OrderedItems;
-import com.sr.L.DShop.entities.Orders;
-import com.sr.L.DShop.entities.Products;
+import com.sr.L.DShop.entities.*;
 import com.sr.L.DShop.enums.PaymentStatus;
 import com.sr.L.DShop.exceptions.ProductException;
 import com.sr.L.DShop.exceptions.UnauthorizedException;
 import com.sr.L.DShop.models.ResponseModel;
 import com.sr.L.DShop.payload.Request.OrderRequest;
-import com.sr.L.DShop.repo.OrderRepo;
-import com.sr.L.DShop.repo.OrderedItemsRepo;
-import com.sr.L.DShop.repo.ProductRepo;
-import com.sr.L.DShop.repo.UserRepo;
+import com.sr.L.DShop.repo.*;
 import com.sr.L.DShop.service.OrderService;
 import com.sr.L.DShop.utils.TagHelper;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +27,9 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepo userRepo;
     private final ProductRepo productRepo;
     private final OrderedItemsRepo orderedItemsRepo;
+    private final PaymentRepo paymentRepo;
+
+
 
 
     @Override
@@ -43,6 +40,11 @@ public class OrderServiceImpl implements OrderService {
                 .builder()
                 .orderTag(orderTag)
                 .ldUser(getAuthenticatedUserEntity())
+                .build();
+
+        Payment payment = Payment
+                .builder()
+                .orders(userOrder)
                 .paymentStatus(PaymentStatus.PENDING)
                 .build();
 
@@ -66,6 +68,7 @@ public class OrderServiceImpl implements OrderService {
             orderedItemsRepo.save(items);
         }
 
+        paymentRepo.save(payment);
         orderRepo.save(userOrder);
 
         Map<String, Object> orderDetails = new HashMap<>();

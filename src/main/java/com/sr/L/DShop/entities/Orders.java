@@ -22,8 +22,4 @@ public class Orders extends AbstractBaseEntity {
     @JoinColumn(name = "customerId", referencedColumnName = "id")
     private LdUser ldUser;
 
-    @Enumerated(EnumType.STRING)
-    private PaymentStatus paymentStatus;
-
-
 }
